@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reatcurly — Hot Dogs Worth the Hype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow:   #FFD600;
+      --yellow-dark: #E6BE00;
+      --red:      #E63946;
+      --black:    #111111;
+      --gray:     #F5F5F5;
+      --text:     #222222;
+      --muted:    #666666;
+      --white:    #FFFFFF;
+      --radius:   14px;
+      --shadow:   0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid #EEEEEE;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6vw;
+      height: 70px;
+    }
+
+    .nav-logo img { height: 36px; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--red); }
+
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.5rem;
+      border-radius: 50px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--black);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--black);
+      border: 2px solid var(--black);
+    }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      min-height: 90vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 6vw;
+      gap: 4rem;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 560px;
+      height: 560px;
+      background: var(--yellow);
+      border-radius: 50%;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -80px;
+      width: 320px;
+      height: 320px;
+      background: var(--red);
+      border-radius: 50%;
+      opacity: 0.08;
+      z-index: 0;
+    }
+
+    .hero-text { position: relative; z-index: 1; }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 50px;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      line-height: 1.08;
+      color: var(--black);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 span { color: var(--red); }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 460px;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image .hot-dog-visual {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #FFF8DC 0%, #FFE566 40%, #FFD600 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9rem;
+      box-shadow: 0 20px 60px rgba(255,214,0,0.4);
+      position: relative;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .hero-image .badge-pill {
+      position: absolute;
+      background: var(--red);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 50px;
+      box-shadow: var(--shadow);
+      white-space: nowrap;
+    }
+
+    .badge-pill.tl { top: 12%; left: -4%; }
+    .badge-pill.br { bottom: 14%; right: -4%; background: var(--black); }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-18px); }
+    }
+
+    /* ── MARQUEE ─────────────────────────────────────── */
+    .marquee-band {
+      background: var(--black);
+      color: var(--yellow);
+      overflow: hidden;
+      padding: 0.9rem 0;
+      white-space: nowrap;
+    }
+
+    .marquee-inner {
+      display: inline-flex;
+      animation: marquee 18s linear infinite;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .marquee-inner span { margin: 0 2.5rem; }
+    .marquee-inner .dot { color: var(--red); }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── MENU ─────────────────────────────────────────── */
+    .section {
+      padding: 7rem 6vw;
+    }
+
+    .section-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      line-height: 1.15;
+      color: var(--black);
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.65;
+      margin-bottom: 3.5rem;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 2rem;
+    }
+
+    .menu-card {
+      background: var(--white);
+      border: 1px solid #EBEBEB;
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow);
+    }
+
+    .menu-card-img {
+      background: var(--gray);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.5rem;
+      position: relative;
+    }
+
+    .menu-card-img.yellow { background: #FFF9D6; }
+    .menu-card-img.pink   { background: #FFF0F0; }
+    .menu-card-img.green  { background: #F0FFF4; }
+    .menu-card-img.blue   { background: #F0F7FF; }
+
+    .menu-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--red);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 50px;
+    }
+
+    .menu-card-body { padding: 1.2rem 1.4rem 1.5rem; }
+
+    .menu-card-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .menu-card-desc {
+      font-size: 0.87rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .menu-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .menu-price {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+    }
+
+    /* ── WHY US ───────────────────────────────────────── */
+    .why-section {
+      background: var(--black);
+      color: var(--white);
+      padding: 7rem 6vw;
+    }
+
+    .why-section .section-title { color: var(--white); }
+    .why-section .section-sub   { color: #AAAAAA; }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .why-card {
+      background: #1A1A1A;
+      border-radius: var(--radius);
+      padding: 2rem 1.6rem;
+      border: 1px solid #2A2A2A;
+      transition: border-color 0.2s;
+    }
+
+    .why-card:hover { border-color: var(--yellow); }
+
+    .why-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .why-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .why-card p {
+      font-size: 0.88rem;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    /* ── PRICING ──────────────────────────────────────── */
+    .pricing-section {
+      padding: 7rem 6vw;
+      background: var(--gray);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      border: 2px solid transparent;
+      box-shadow: var(--shadow);
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .pricing-card:hover { transform: translateY(-4px); }
+
+    .pricing-card.featured {
+      border-color: var(--yellow);
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .pricing-card.featured .plan-name { color: var(--yellow); }
+    .pricing-card.featured .plan-desc { color: #AAA; }
+    .pricing-card.featured .plan-feature { color: #DDD; border-color: #333; }
+
+    .plan-tag {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--yellow);
+      color: var(--black);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 50px;
+    }
+
+    .plan-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .plan-price {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 2.8rem;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .plan-price span {
+      font-size: 1rem;
+      font-weight: 600;
+      vertical-align: super;
+      margin-right: 2px;
+    }
+
+    .plan-period {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .pricing-card.featured .plan-period { color: #AAA; }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+
+    .plan-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .plan-feature:last-child { border-bottom: none; }
+
+    .check { color: var(--red); font-weight: 700; flex-shrink: 0; }
+    .pricing-card.featured .check { color: var(--yellow); }
+
+    /* ── TESTIMONIALS ─────────────────────────────────── */
+    .testi-section {
+      padding: 7rem 6vw;
+    }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .testi-card {
+      background: var(--white);
+      border: 1px solid #EBEBEB;
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .testi-card:hover { box-shadow: var(--shadow); }
+
+    .stars {
+      color: var(--yellow);
+      font-size: 1rem;
+      margin-bottom: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+
+    .testi-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .testi-name { font-weight: 700; font-size: 0.9rem; }
+    .testi-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── CTA ──────────────────────────────────────────── */
+    .cta-section {
+      background: var(--red);
+      color: var(--white);
+      padding: 7rem 6vw;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-section .btn-yellow { font-size: 1rem; padding: 0.9rem 2.4rem; }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      color: #AAA;
+      padding: 3.5rem 6vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand img { height: 32px; margin-bottom: 1rem; }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      max-width: 240px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.55rem; }
+    .footer-col ul li a {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--yellow); }
+
+    .footer-bottom {
+      background: var(--black);
+      border-top: 1px solid #1F1F1F;
+      text-align: center;
+      padding: 1.2rem 6vw;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────── */
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding: 5rem 6vw 4rem;
+        text-align: center;
+      }
+      .hero-cta { justify-content: center; }
+      .hero-image { display: none; }
+      .hero::before, .hero::after { display: none; }
+      footer { grid-template-columns: 1fr; gap: 2rem; }
+      nav .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <img src="../public/recurly-logo-black.webp" alt="Reatcurly" />
+    </div>
+    <ul class="nav-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#why">Why Us</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <a href="#pricing" class="btn btn-primary">Order Now</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-badge">🌭 Freshly Made Daily</div>
+      <h1>Hot Dogs That<br /><span>Hit Different.</span></h1>
+      <p>Reatcurly brings bold flavors, premium ingredients, and a whole lot of fun to your table. Because life's too short for a boring hot dog.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-primary">Explore the Menu</a>
+        <a href="#pricing" class="btn btn-outline">See Pricing</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hot-dog-visual">
+        🌭
+        <div class="badge-pill tl">🔥 Fan Favorite</div>
+        <div class="badge-pill br">⚡ Quick Pickup</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-band" aria-hidden="true">
+    <div class="marquee-inner">
+      <span>Classic Dog</span><span class="dot">✦</span>
+      <span>Spicy Jalapeño</span><span class="dot">✦</span>
+      <span>BBQ Smokehouse</span><span class="dot">✦</span>
+      <span>Truffle Dijon</span><span class="dot">✦</span>
+      <span>Chicago Style</span><span class="dot">✦</span>
+      <span>Cheesy Bacon</span><span class="dot">✦</span>
+      <span>Street Cart OG</span><span class="dot">✦</span>
+      <span>Classic Dog</span><span class="dot">✦</span>
+      <span>Spicy Jalapeño</span><span class="dot">✦</span>
+      <span>BBQ Smokehouse</span><span class="dot">✦</span>
+      <span>Truffle Dijon</span><span class="dot">✦</span>
+      <span>Chicago Style</span><span class="dot">✦</span>
+      <span>Cheesy Bacon</span><span class="dot">✦</span>
+      <span>Street Cart OG</span><span class="dot">✦</span>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section id="menu" class="section">
+    <div class="section-tag">Our Menu</div>
+    <h2 class="section-title">Pick Your<br />Perfect Dog</h2>
+    <p class="section-sub">Handcrafted with top-grade ingredients. Every dog is a flavor adventure — no mediocre buns, no boring toppings.</p>
+
+    <div class="menu-grid">
+      <div class="menu-card">
+        <div class="menu-card-img yellow">
+          🌭
+          <span class="menu-badge">Best Seller</span>
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-name">The Classic Curly</div>
+          <div class="menu-card-desc">Juicy all-beef frank, yellow mustard, sweet relish, onions on a perfectly toasted brioche bun.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">$8.99</span>
+            <a href="#pricing" class="btn btn-primary" style="padding:0.5rem 1.1rem;font-size:0.82rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img pink">
+          🌶️
+          <span class="menu-badge">Hot 🔥</span>
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-name">Spicy Jalapeño Blaze</div>
+          <div class="menu-card-desc">Smoked sausage, jalapeño cream cheese, pickled peppers, sriracha drizzle, crispy shallots.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">$10.99</span>
+            <a href="#pricing" class="btn btn-primary" style="padding:0.5rem 1.1rem;font-size:0.82rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img green">
+          🥓
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-name">BBQ Smokehouse King</div>
+          <div class="menu-card-desc">Slow-smoked brisket dog, cheddar sauce, crispy bacon, caramelized onions, house BBQ.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">$12.49</span>
+            <a href="#pricing" class="btn btn-primary" style="padding:0.5rem 1.1rem;font-size:0.82rem;">Order</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card">
+        <div class="menu-card-img blue">
+          🧀
+          <span class="menu-badge">New</span>
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-name">Truffle Dijon Luxe</div>
+          <div class="menu-card-desc">Wagyu beef dog, black truffle aioli, Dijon mustard, arugula, shaved parmesan, sea salt.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">$14.99</span>
+            <a href="#pricing" class="btn btn-primary" style="padding:0.5rem 1.1rem;font-size:0.82rem;">Order</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section id="why" class="why-section">
+    <div class="section-tag" style="color:var(--yellow)">Why Reatcurly</div>
+    <h2 class="section-title">We're Not Your<br />Average Stand</h2>
+    <p class="section-sub">We obsess over every ingredient, every bun, every crunch. Here's what sets us apart.</p>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🥩</div>
+        <h3>Premium Ingredients</h3>
+        <p>100% all-beef, no fillers. Locally sourced produce and artisan sauces made in-house every morning.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <h3>Lightning Fast</h3>
+        <p>Order in-store or online. Your dog is ready in under 5 minutes — because hunger doesn't wait.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🌱</div>
+        <h3>Vegan Options</h3>
+        <p>Plant-based dogs that taste just as good. Full flavor, no compromise — we've got everyone covered.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📦</div>
+        <h3>Meal Plans</h3>
+        <p>Subscribe and save. Weekly or monthly bundles delivered fresh to your door or ready for pickup.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="pricing-section">
+    <div style="text-align:center; margin-bottom: 3.5rem;">
+      <div class="section-tag" style="text-align:center">Pricing</div>
+      <h2 class="section-title">Simple Plans,<br />Big Flavor</h2>
+      <p class="section-sub" style="margin:0 auto">Whether you're a solo snacker or feeding the whole crew, we have a plan that hits just right.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Solo -->
+      <div class="pricing-card">
+        <div class="plan-name">Solo Dog</div>
+        <div class="plan-desc">Perfect for a quick solo bite</div>
+        <div class="plan-price"><span>$</span>8<span style="font-size:1.2rem;vertical-align:baseline;">.99</span></div>
+        <div class="plan-period">per order</div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="check">✓</span> 1 signature hot dog</li>
+          <li class="plan-feature"><span class="check">✓</span> Choice of bun</li>
+          <li class="plan-feature"><span class="check">✓</span> 2 house sauces</li>
+          <li class="plan-feature"><span class="check">✓</span> Regular size</li>
+        </ul>
+        <a href="#" class="btn btn-yellow" style="width:100%;text-align:center;display:block;">Get Started</a>
+      </div>
+
+      <!-- Bundle — featured -->
+      <div class="pricing-card featured">
+        <div class="plan-tag">Most Popular</div>
+        <div class="plan-name">The Bundle</div>
+        <div class="plan-desc">Feed 4 with epic variety</div>
+        <div class="plan-price"><span>$</span>34<span style="font-size:1.2rem;vertical-align:baseline;">.99</span></div>
+        <div class="plan-period">per order · saves $7</div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="check">✓</span> 4 signature hot dogs</li>
+          <li class="plan-feature"><span class="check">✓</span> Mix & match flavors</li>
+          <li class="plan-feature"><span class="check">✓</span> 4 sides + drinks</li>
+          <li class="plan-feature"><span class="check">✓</span> Priority pickup</li>
+          <li class="plan-feature"><span class="check">✓</span> Free extra sauces</li>
+        </ul>
+        <a href="#" class="btn btn-yellow" style="width:100%;text-align:center;display:block;">Get Started</a>
+      </div>
+
+      <!-- Monthly sub -->
+      <div class="pricing-card">
+        <div class="plan-name">Monthly Club</div>
+        <div class="plan-desc">For the true Reatcurly fan</div>
+        <div class="plan-price"><span>$</span>49<span style="font-size:1.2rem;vertical-align:baseline;">.99</span></div>
+        <div class="plan-period">per month · best value</div>
+        <ul class="plan-features">
+          <li class="plan-feature"><span class="check">✓</span> 8 dogs / month</li>
+          <li class="plan-feature"><span class="check">✓</span> Exclusive monthly specials</li>
+          <li class="plan-feature"><span class="check">✓</span> Free delivery</li>
+          <li class="plan-feature"><span class="check">✓</span> Member-only discounts</li>
+          <li class="plan-feature"><span class="check">✓</span> Early access to new items</li>
+        </ul>
+        <a href="#" class="btn btn-primary" style="width:100%;text-align:center;display:block;">Subscribe</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="reviews" class="testi-section">
+    <div class="section-tag">Reviews</div>
+    <h2 class="section-title">People Can't<br />Stop Talking</h2>
+    <p class="section-sub">Don't take our word for it — here's what the Reatcurly faithful have to say.</p>
+
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"The Truffle Dijon Luxe changed my entire worldview on hot dogs. I'm never going back to ballpark franks. Ever."</p>
+        <div class="testi-author">
+          <div class="avatar" style="background:#FFF0F0;">😄</div>
+          <div>
+            <div class="testi-name">Marcus T.</div>
+            <div class="testi-role">Monthly Club Member</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Ordered the Bundle for my kids' birthday and they absolutely lost it. Best party food decision of my life, hands down."</p>
+        <div class="testi-author">
+          <div class="avatar" style="background:#F0FFF4;">🤩</div>
+          <div>
+            <div class="testi-name">Priya S.</div>
+            <div class="testi-role">Verified Customer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Fastest pickup I've ever experienced. Ordered online, walked in, grabbed my Spicy Jalapeño Blaze, gone in 60 seconds. Legendary."</p>
+        <div class="testi-author">
+          <div class="avatar" style="background:#FFF9D6;">😎</div>
+          <div>
+            <div class="testi-name">Derek O.</div>
+            <div class="testi-role">Verified Customer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to Taste<br />the Difference?</h2>
+    <p>Join thousands of hot dog lovers who've made Reatcurly their go-to. Your first order is waiting.</p>
+    <a href="#pricing" class="btn btn-yellow">Order Your Dog Now 🌭</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <img src="../public/recurly-logo-white.webp" alt="Reatcurly" />
+      <p>Bold hot dogs for bold people. Made fresh, served fast, loved always.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Menu</h4>
+      <ul>
+        <li><a href="#menu">Classic Dogs</a></li>
+        <li><a href="#menu">Spicy Selection</a></li>
+        <li><a href="#menu">Vegan Options</a></li>
+        <li><a href="#menu">Sides & Drinks</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    © 2026 Reatcurly, Inc. — Hot Dogs Worth the Hype.
+  </div>
+
+</body>
+</html>

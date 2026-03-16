@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reatcurly — Gourmet Hot Dogs</title>
+
+  <!-- Phosphor Icons CDN -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+  <!-- Google Fonts (Roboto / Roboto Mono as fallback stack) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────────────
+       Brand Tokens
+    ───────────────────────────────────────────── */
+    :root {
+      --off-white:   #FFFDF2;
+      --yellow:      #FFD706;
+      --tangerine:   #FF8200;
+      --off-black:   #0D0D0B;
+
+      /* Typography */
+      --font-headline: 'F37 Gruffy', 'Roboto', sans-serif;
+      --font-body:     'FT Polar', 'Roboto Mono', monospace;
+
+      /* Spacing scale X → X/2 → X/4 */
+      --sp-xl:  96px;
+      --sp-lg:  48px;
+      --sp-md:  24px;
+      --sp-sm:  12px;
+      --sp-xs:   6px;
+
+      --container: 1280px;
+      --gutter:     64px;
+    }
+
+    /* ─────────────────────────────────────────────
+       Reset
+    ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html  { font-size: 16px; scroll-behavior: smooth; }
+    body  {
+      background: var(--off-white);
+      color: var(--off-black);
+      font-family: var(--font-body);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    img   { display: block; max-width: 100%; }
+    a     { color: inherit; text-decoration: none; }
+    ul    { list-style: none; }
+
+    /* ─────────────────────────────────────────────
+       Layout Helpers
+    ───────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    /* ─────────────────────────────────────────────
+       Typography Scale
+    ───────────────────────────────────────────── */
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--off-black);
+    }
+    .headline-xl {
+      font-family: var(--font-headline);
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+    .headline-lg {
+      font-family: var(--font-headline);
+      font-size: clamp(2.25rem, 4.5vw, 4rem);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+    }
+    .headline-md {
+      font-family: var(--font-headline);
+      font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .body-lg {
+      font-family: var(--font-body);
+      font-size: 1.125rem;
+      line-height: 1.7;
+      max-width: 54ch;
+    }
+    .body-sm {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    /* ─────────────────────────────────────────────
+       Buttons
+    ───────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,13,11,.14); }
+    .btn:active { transform: translateY(0);    box-shadow: none; }
+
+    .btn-primary {
+      background: var(--tangerine);
+      color: var(--off-black);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--off-black);
+      border: 1.5px solid var(--off-black);
+    }
+    .btn-ghost:hover { background: var(--off-black); color: var(--off-white); }
+
+    /* ─────────────────────────────────────────────
+       Curvy Linework — SVG accents (open paths only)
+    ───────────────────────────────────────────── */
+    .curvy-line {
+      position: absolute;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    /* ─────────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding-block: 20px;
+      background: rgba(255, 253, 242, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(13,13,11,.06);
+    }
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-md);
+    }
+    .nav__logo { height: 32px; width: auto; }
+    .nav__logo-wrap {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+    }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-lg);
+    }
+    .nav__links a {
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.65;
+      transition: opacity 0.15s;
+    }
+    .nav__links a:hover { opacity: 1; }
+    .nav__cta { display: flex; align-items: center; gap: var(--sp-sm); }
+
+    /* ─────────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────────── */
+    .hero {
+      background: var(--yellow);
+      padding-top: calc(96px + 80px); /* nav height + top padding */
+      padding-bottom: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-xl);
+      align-items: end;
+    }
+    .hero__content {
+      padding-bottom: var(--sp-xl);
+    }
+    .hero__eyebrow {
+      margin-bottom: var(--sp-md);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+    }
+    .hero__eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      background: var(--off-black);
+      border-radius: 2px;
+    }
+    .hero__headline {
+      margin-bottom: var(--sp-lg);
+    }
+    .hero__headline em {
+      font-style: normal;
+      display: block;
+      /* second line slightly indented for visual rhythm */
+      padding-left: 1.5rem;
+    }
+    .hero__body {
+      margin-bottom: var(--sp-lg);
+      opacity: 0.82;
+    }
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+    }
+    .hero__scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    /* Repeating-scale photo treatment (X, X/2, X/4) */
+    .hero__photo-stack {
+      position: relative;
+      align-self: end;
+      height: 560px;
+    }
+    .photo-frame {
+      position: absolute;
+      bottom: 0;
+      border-radius: 16px 16px 0 0;
+      overflow: hidden;
+      background: #c8b08a;  /* warm placeholder */
+    }
+    /* X — primary frame */
+    .photo-frame--x {
+      right: 0;
+      width: 340px;
+      height: 520px;
+    }
+    /* X/2 — secondary frame */
+    .photo-frame--x2 {
+      right: 360px;
+      width: 170px;
+      height: 260px;
+      bottom: 0;
+    }
+    /* X/4 — tertiary frame */
+    .photo-frame--x4 {
+      right: 545px;
+      width: 85px;
+      height: 130px;
+      bottom: 0;
+    }
+    .photo-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.85) contrast(1.08);
+      transition: transform 0.6s ease;
+    }
+    .photo-frame:hover .photo-inner img { transform: scale(1.04); }
+    /* placeholder visual when no image */
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #d4a96a 0%, #b8825f 50%, #8c6040 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-placeholder i { font-size: 2rem; color: rgba(255,253,242,0.35); }
+    .photo-frame--x .photo-placeholder i { font-size: 3.5rem; }
+
+    /* SVG curvy hero accent */
+    .hero__curve {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      width: 100%;
+    }
+
+    /* ─────────────────────────────────────────────
+       MARQUEE STRIP
+    ───────────────────────────────────────────── */
+    .marquee-strip {
+      background: var(--off-black);
+      color: var(--yellow);
+      padding-block: 14px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-flex;
+      gap: 0;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding-right: var(--sp-xl);
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .marquee-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--tangerine);
+      flex-shrink: 0;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─────────────────────────────────────────────
+       ABOUT / PHILOSOPHY
+    ───────────────────────────────────────────── */
+    .about {
+      padding-block: var(--sp-xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .about__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-xl);
+      align-items: center;
+    }
+    .about__label {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-lg);
+    }
+    .about__label span {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      background: var(--yellow);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .about__headline { margin-bottom: var(--sp-lg); }
+    .about__body     { margin-bottom: var(--sp-lg); opacity: 0.78; }
+    .about__stats {
+      display: flex;
+      gap: var(--sp-lg);
+      padding-top: var(--sp-lg);
+      border-top: 1px solid rgba(13,13,11,.1);
+    }
+    .stat__number {
+      font-family: var(--font-headline);
+      font-size: 2.5rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .stat__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      margin-top: 4px;
+    }
+    .about__visual {
+      position: relative;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffe085 0%, #ffd706 40%, #ffb830 100%);
+    }
+    .about__visual-inner {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      padding: 20px;
+    }
+    .about__img-tile {
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #c9965a, #8c5e35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .about__img-tile i { font-size: 2rem; color: rgba(255,253,242,.35); }
+
+    /* ─────────────────────────────────────────────
+       SIGNATURE LINE (curvy yellow section divider)
+    ───────────────────────────────────────────── */
+    .sig-line {
+      padding-block: var(--sp-sm);
+      overflow: hidden;
+      background: var(--off-white);
+    }
+
+    /* ─────────────────────────────────────────────
+       MENU
+    ───────────────────────────────────────────── */
+    .menu {
+      padding-block: var(--sp-xl);
+      background: var(--off-white);
+      position: relative;
+      overflow: hidden;
+    }
+    .menu__header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: var(--sp-xl);
+    }
+    .menu__header-left { max-width: 480px; }
+    .menu__eyebrow     { margin-bottom: var(--sp-md); }
+    .menu__headline    { margin-bottom: 0; }
+
+    .menu__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .menu-card {
+      background: var(--off-white);
+      border: 1.5px solid rgba(13,13,11,.08);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .menu-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--yellow);
+      box-shadow: 0 16px 48px rgba(13,13,11,.08);
+    }
+    .menu-card--featured {
+      background: var(--off-black);
+      color: var(--off-white);
+      border-color: var(--off-black);
+    }
+    .menu-card--featured:hover { border-color: var(--yellow); }
+    .menu-card__img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #bf8f5c, #8a5c32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .menu-card:hover .menu-card__img img { transform: scale(1.04); }
+    .menu-card--featured .menu-card__img {
+      background: linear-gradient(135deg, #ffd706, #ff8200);
+    }
+    .menu-card__img i { font-size: 3rem; color: rgba(255,253,242,.3); }
+    .menu-card__tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--tangerine);
+      color: var(--off-black);
+      font-family: var(--font-body);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+    .menu-card__body {
+      padding: 24px;
+    }
+    .menu-card__name {
+      font-family: var(--font-headline);
+      font-size: 1.375rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .menu-card__desc {
+      font-size: 0.875rem;
+      opacity: 0.65;
+      margin-bottom: 20px;
+    }
+    .menu-card--featured .menu-card__desc { color: rgba(255,253,242,.6); opacity: 1; }
+    .menu-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .menu-card__price {
+      font-family: var(--font-headline);
+      font-size: 1.25rem;
+    }
+    .menu-card__add {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(13,13,11,.15);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .menu-card__add:hover {
+      background: var(--yellow);
+      border-color: var(--yellow);
+    }
+    .menu-card--featured .menu-card__add {
+      border-color: rgba(255,253,242,.25);
+    }
+    .menu-card--featured .menu-card__add:hover {
+      background: var(--yellow);
+      border-color: var(--yellow);
+    }
+    .menu-card--featured .menu-card__add i { color: var(--off-white); }
+    .menu-card--featured .menu-card__add:hover i { color: var(--off-black); }
+
+    /* ─────────────────────────────────────────────
+       EXPERIENCE / VIBE SECTION
+    ───────────────────────────────────────────── */
+    .experience {
+      background: var(--off-black);
+      color: var(--off-white);
+      padding-block: var(--sp-xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .experience__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-xl);
+      align-items: center;
+    }
+    .experience__eyebrow { color: var(--yellow); margin-bottom: var(--sp-md); }
+    .experience__headline {
+      font-family: var(--font-headline);
+      font-size: clamp(2.5rem, 4vw, 3.75rem);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--off-white);
+      margin-bottom: var(--sp-lg);
+    }
+    .experience__body {
+      opacity: 0.65;
+      margin-bottom: var(--sp-lg);
+    }
+    .experience__features {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-md);
+    }
+    .feature-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-md);
+      padding-block: var(--sp-md);
+      border-top: 1px solid rgba(255,253,242,.08);
+    }
+    .feature-row__icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,215,6,.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .feature-row__icon i { color: var(--yellow); font-size: 1.25rem; }
+    .feature-row__title {
+      font-family: var(--font-headline);
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--off-white);
+    }
+    .feature-row__desc {
+      font-size: 0.875rem;
+      color: rgba(255,253,242,.55);
+    }
+
+    .experience__photo-collage {
+      position: relative;
+      height: 520px;
+    }
+    .collage-img {
+      position: absolute;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .collage-img--a {
+      width: 260px; height: 340px;
+      top: 0; right: 0;
+      background: linear-gradient(135deg, #c9965a, #8c5e35);
+    }
+    .collage-img--b {
+      width: 200px; height: 200px;
+      bottom: 60px; right: 280px;
+      background: linear-gradient(135deg, #ffd706, #ff8200);
+    }
+    .collage-img--c {
+      width: 140px; height: 180px;
+      top: 100px; right: 290px;
+      background: linear-gradient(135deg, #a0735e, #6b3e28);
+    }
+    .collage-img i {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(255,253,242,.3);
+    }
+    .collage-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--yellow);
+      color: var(--off-black);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .collage-badge__num {
+      font-family: var(--font-headline);
+      font-size: 2rem;
+      line-height: 1;
+    }
+    .collage-badge__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      max-width: 80px;
+      line-height: 1.3;
+    }
+
+    /* Curvy yellow line on dark bg */
+    .experience__curvy {
+      position: absolute;
+      top: -20px;
+      left: -40px;
+      opacity: 0.08;
+    }
+
+    /* ─────────────────────────────────────────────
+       TESTIMONIALS
+    ───────────────────────────────────────────── */
+    .testimonials {
+      padding-block: var(--sp-xl);
+      background: var(--off-white);
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonials__header {
+      margin-bottom: var(--sp-xl);
+    }
+    .testimonials__eyebrow { margin-bottom: var(--sp-md); }
+    .testimonials__headline { max-width: 460px; }
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .testi-card {
+      background: var(--off-white);
+      border: 1.5px solid rgba(13,13,11,.08);
+      border-radius: 20px;
+      padding: 28px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .testi-card:hover {
+      border-color: var(--yellow);
+      box-shadow: 0 8px 32px rgba(13,13,11,.06);
+    }
+    .testi-card:first-child {
+      background: var(--yellow);
+      border-color: var(--yellow);
+    }
+    .testi-card__stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+    .testi-card__stars i { color: var(--tangerine); font-size: 1rem; }
+    .testi-card:first-child .testi-card__stars i { color: var(--off-black); }
+    .testi-card__quote {
+      font-family: var(--font-headline);
+      font-size: 1.125rem;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+    .testi-card__author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(13,13,11,.08);
+    }
+    .testi-card:first-child .testi-card__author { border-top-color: rgba(13,13,11,.12); }
+    .testi-card__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c9965a, #8c5e35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .testi-card__avatar i { color: rgba(255,253,242,.7); font-size: 1.1rem; }
+    .testi-card__name {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .testi-card__loc {
+      font-size: 0.75rem;
+      opacity: 0.5;
+    }
+
+    /* ─────────────────────────────────────────────
+       ORDER CTA BANNER
+    ───────────────────────────────────────────── */
+    .order-banner {
+      background: var(--tangerine);
+      padding-block: var(--sp-xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .order-banner__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-lg);
+    }
+    .order-banner__eyebrow { margin-bottom: var(--sp-md); color: rgba(13,13,11,.6); }
+    .order-banner__headline {
+      font-family: var(--font-headline);
+      font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--off-black);
+      max-width: 560px;
+    }
+    .order-banner__actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-sm);
+      align-items: flex-start;
+      flex-shrink: 0;
+    }
+    .btn-order-main {
+      background: var(--off-black);
+      color: var(--off-white);
+    }
+    .btn-order-ghost {
+      background: transparent;
+      color: var(--off-black);
+      border: 1.5px solid rgba(13,13,11,.25);
+    }
+    .btn-order-ghost:hover { background: var(--off-black); color: var(--off-white); border-color: var(--off-black); }
+
+    /* Curvy accent on tangerine */
+    .order-banner__curvy {
+      position: absolute;
+      right: -60px;
+      top: -40px;
+      opacity: 0.12;
+    }
+
+    /* ─────────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────────── */
+    .footer {
+      background: var(--off-black);
+      color: var(--off-white);
+      padding-top: var(--sp-xl);
+      padding-bottom: var(--sp-lg);
+    }
+    .footer__inner {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: var(--sp-xl);
+      padding-bottom: var(--sp-xl);
+      border-bottom: 1px solid rgba(255,253,242,.08);
+    }
+    .footer__brand-logo {
+      height: 28px;
+      width: auto;
+      margin-bottom: var(--sp-lg);
+      /* invert to white */
+      filter: brightness(0) invert(1);
+    }
+    .footer__brand-desc {
+      font-size: 0.875rem;
+      color: rgba(255,253,242,.5);
+      line-height: 1.7;
+      margin-bottom: var(--sp-lg);
+      max-width: 280px;
+    }
+    .footer__social {
+      display: flex;
+      gap: var(--sp-sm);
+    }
+    .footer__social-link {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,253,242,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,253,242,.6);
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .footer__social-link:hover {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      color: var(--off-black);
+    }
+    .footer__social-link i { font-size: 1rem; }
+    .footer__col-title {
+      font-family: var(--font-body);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,253,242,.35);
+      margin-bottom: var(--sp-md);
+    }
+    .footer__col-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer__col-links a {
+      font-size: 0.875rem;
+      color: rgba(255,253,242,.6);
+      transition: color 0.15s;
+    }
+    .footer__col-links a:hover { color: var(--yellow); }
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--sp-lg);
+      gap: var(--sp-md);
+    }
+    .footer__copy {
+      font-size: 0.8125rem;
+      color: rgba(255,253,242,.3);
+    }
+    .footer__legal {
+      display: flex;
+      gap: var(--sp-lg);
+    }
+    .footer__legal a {
+      font-size: 0.8125rem;
+      color: rgba(255,253,242,.3);
+      transition: color 0.15s;
+    }
+    .footer__legal a:hover { color: rgba(255,253,242,.7); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAV
+═══════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo-wrap">
+        <img
+          src="../public/recurly-logo-black.webp"
+          alt="Reatcurly"
+          class="nav__logo"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        />
+        <span style="font-family:var(--font-headline); font-size:1.5rem; font-weight:500; letter-spacing:-0.02em;">Reatcurly</span>
+      </a>
+
+      <ul class="nav__links">
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#">Find Us</a></li>
+      </ul>
+
+      <div class="nav__cta">
+        <a href="#menu" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.75rem;">
+          <i class="ph ph-bag"></i>
+          Order Now
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <!-- Curvy yellow linework accent — open paths only -->
+  <svg class="curvy-line" style="top:80px; right:0; width:520px; height:320px;" viewBox="0 0 520 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M520 40 C400 40, 340 80, 280 120 S140 200, 60 180" stroke="rgba(13,13,11,0.08)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M520 90 C420 90, 360 130, 300 170 S160 240, 80 230" stroke="rgba(13,13,11,0.05)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M480 10 C380 30, 320 80, 250 130" stroke="rgba(13,13,11,0.04)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="hero__inner">
+      <!-- Left: Content -->
+      <div class="hero__content">
+        <p class="eyebrow hero__eyebrow">Premium gourmet hot dogs</p>
+
+        <h1 class="headline-xl hero__headline">
+          Crafted<br/>
+          <em>with heat.</em>
+        </h1>
+
+        <p class="body-lg hero__body">
+          Reatcurly elevates the hot dog into something worth savoring — quality cuts, unexpected flavors, and a warmth that makes every bite feel like a summer afternoon.
+        </p>
+
+        <div class="hero__actions">
+          <a href="#menu" class="btn btn-primary">
+            <i class="ph ph-lightning"></i>
+            Explore the Menu
+          </a>
+          <a href="#about" class="btn btn-ghost">
+            Our Story
+          </a>
+        </div>
+
+        <div style="margin-top: var(--sp-xl);">
+          <div class="hero__scroll-hint">
+            <i class="ph ph-arrow-down"></i>
+            <span>Scroll to explore</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Repeating-scale photo stack (X, X/2, X/4) -->
+      <div class="hero__photo-stack">
+        <!-- X/4 — smallest -->
+        <div class="photo-frame photo-frame--x4">
+          <div class="photo-inner">
+            <img
+              src="https://images.pexels.com/photos/14095326/pexels-photo-14095326.jpeg?auto=compress&cs=tinysrgb&w=300&h=240&dpr=1"
+              alt="People enjoying street food"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- X/2 — medium -->
+        <div class="photo-frame photo-frame--x2">
+          <div class="photo-inner">
+            <img
+              src="https://images.pexels.com/photos/3776870/pexels-photo-3776870.jpeg?auto=compress&cs=tinysrgb&w=600&h=520&dpr=1"
+              alt="Friends enjoying a picnic"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- X — primary -->
+        <div class="photo-frame photo-frame--x">
+          <div class="photo-inner">
+            <img
+              src="https://images.pexels.com/photos/5638643/pexels-photo-5638643.jpeg?auto=compress&cs=tinysrgb&w=800&h=1040&dpr=1"
+              alt="Group of people sharing food outdoors"
+            />
+          </div>
+        </div>
+
+        <!-- Floating label -->
+        <div style="position:absolute; top: 24px; right: 360px; background: var(--off-white); border-radius: 100px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(13,13,11,.12);">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #34c759; flex-shrink:0;"></span>
+          <span class="eyebrow" style="font-size: 0.6875rem;">Open Now</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom curve wave transition -->
+  <svg class="hero__curve" viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0 C360 80, 1080 80, 1440 0 L1440 80 L0 80 Z" fill="#FFFDF2"/>
+  </svg>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     MARQUEE STRIP
+═══════════════════════════════════════════ -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <!-- first copy -->
+    <span class="marquee-item"><span class="marquee-dot"></span> Handcrafted Since 2019</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Sustainably Sourced</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> No Shortcuts, Ever</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> 12 Signature Dogs</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Open-Flame Grilled</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Chef-Curated Toppings</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Weekend Pop-Ups</span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item"><span class="marquee-dot"></span> Handcrafted Since 2019</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Sustainably Sourced</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> No Shortcuts, Ever</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> 12 Signature Dogs</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Open-Flame Grilled</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Chef-Curated Toppings</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Weekend Pop-Ups</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     ABOUT / PHILOSOPHY
+═══════════════════════════════════════════ -->
+<section class="about" id="about">
+  <!-- Curvy linework accent -->
+  <svg class="curvy-line" style="top: -30px; right: 80px; width: 400px; height: 200px; opacity: 0.06;" viewBox="0 0 400 200" fill="none" aria-hidden="true">
+    <path d="M20 180 C80 100, 160 40, 260 20 S360 40, 400 60" stroke="var(--off-black)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M0 160 C70 90, 150 30, 250 10" stroke="var(--off-black)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="about__inner">
+      <!-- Left: Content -->
+      <div>
+        <div class="about__label">
+          <span><i class="ph ph-star-four" style="font-size: 1rem; color: var(--off-black);"></i></span>
+          <p class="eyebrow">Our philosophy</p>
+        </div>
+
+        <h2 class="headline-lg about__headline">
+          Simple food,<br/>done with<br/>obsession.
+        </h2>
+
+        <p class="body-lg about__body">
+          We believe the hot dog is one of the great canvases of American cooking. Reatcurly started at a backyard grill and grew into something more — a commitment to sourcing clean, ethically raised meats and pairing them with thoughtful, globally inspired toppings.
+        </p>
+
+        <a href="#" class="btn btn-primary">
+          <i class="ph ph-read-cv-logo"></i>
+          Read Our Story
+        </a>
+
+        <div class="about__stats">
+          <div class="stat">
+            <div class="stat__number">12+</div>
+            <div class="stat__label">Signature<br/>recipes</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">6</div>
+            <div class="stat__label">Local farm<br/>partners</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">40k+</div>
+            <div class="stat__label">Happy<br/>customers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Visual mosaic -->
+      <div class="about__visual" id="experience">
+        <div class="about__visual-inner">
+          <div class="about__img-tile" style="background:none; overflow:hidden;">
+            <img src="https://images.pexels.com/photos/9578709/pexels-photo-9578709.jpeg?auto=compress&cs=tinysrgb&w=700&h=400&dpr=1" alt="Group of friends dining outdoors" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+          </div>
+          <div class="about__img-tile" style="background:none; overflow:hidden;">
+            <img src="https://images.pexels.com/photos/8021127/pexels-photo-8021127.jpeg?auto=compress&cs=tinysrgb&w=700&h=400&dpr=1" alt="Group of friends having a picnic" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+          </div>
+        </div>
+        <!-- Floating tag -->
+        <div style="position: absolute; bottom: 24px; left: 24px; background: var(--off-black); color: var(--off-white); border-radius: 14px; padding: 14px 18px;">
+          <div style="font-family: var(--font-headline); font-size: 1.5rem; line-height:1;">100%</div>
+          <div style="font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; margin-top: 4px;">Humanely raised</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION DIVIDER — Curvy Yellow Linework
+═══════════════════════════════════════════ -->
+<div class="sig-line">
+  <div class="container">
+    <svg width="100%" height="48" viewBox="0 0 1152 48" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 24 C96 0, 192 48, 288 24 S480 0, 576 24 S768 48, 864 24 S1056 0, 1152 24" stroke="#FFD706" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M0 36 C120 12, 240 48, 360 28 S540 4, 660 36 S840 48, 960 28 S1080 8, 1152 36" stroke="#FFD706" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.45"/>
+    </svg>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     MENU
+═══════════════════════════════════════════ -->
+<section class="menu" id="menu">
+  <!-- Curvy linework right side -->
+  <svg class="curvy-line" style="top: 60px; right: 0; width: 300px; height: 280px; opacity: 0.04;" viewBox="0 0 300 280" fill="none" aria-hidden="true">
+    <path d="M300 20 C220 20, 160 60, 120 120 S80 220, 60 280" stroke="var(--off-black)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M300 80 C230 80, 170 110, 130 170 S100 240, 90 280" stroke="var(--off-black)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="menu__header">
+      <div class="menu__header-left">
+        <p class="eyebrow menu__eyebrow">Signature dogs</p>
+        <h2 class="headline-lg menu__headline">
+          The lineup.
+        </h2>
+      </div>
+      <a href="#" class="btn btn-ghost">
+        Full Menu
+        <i class="ph ph-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="menu__grid">
+      <!-- Card 1 — Featured -->
+      <div class="menu-card menu-card--featured">
+        <div class="menu-card__img" style="background: none;">
+          <span class="menu-card__tag" style="background: var(--yellow); color: var(--off-black); z-index:2;">Best Seller</span>
+          <img src="https://images.pexels.com/photos/15114566/pexels-photo-15114566.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&dpr=1" alt="Woman holding gourmet hot dog" loading="lazy"/>
+        </div>
+        <div class="menu-card__body">
+          <h3 class="menu-card__name">The Golden Standard</h3>
+          <p class="menu-card__desc">Smoked beef frank, roasted corn relish, pickled jalapeños, and our house-made tangerine mustard on a brioche bun.</p>
+          <div class="menu-card__footer">
+            <span class="menu-card__price" style="color: var(--yellow);">$14</span>
+            <button class="menu-card__add" aria-label="Add to order">
+              <i class="ph ph-plus" style="color: var(--yellow);"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="menu-card">
+        <div class="menu-card__img" style="background:none;">
+          <img src="https://images.pexels.com/photos/4676419/pexels-photo-4676419.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&dpr=1" alt="Person holding a hot dog" loading="lazy"/>
+        </div>
+        <div class="menu-card__body">
+          <h3 class="menu-card__name">The Garden Riot</h3>
+          <p class="menu-card__desc">Plant-based frank, chimichurri slaw, charred peppers, and crispy shallots on a sesame milk bun.</p>
+          <div class="menu-card__footer">
+            <span class="menu-card__price">$13</span>
+            <button class="menu-card__add" aria-label="Add to order">
+              <i class="ph ph-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="menu-card">
+        <div class="menu-card__img" style="background:none;">
+          <img src="https://images.pexels.com/photos/30635914/pexels-photo-30635914.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&dpr=1" alt="Gourmet hot dog on wooden plate" loading="lazy"/>
+        </div>
+        <div class="menu-card__body">
+          <h3 class="menu-card__name">Seoul on a Bun</h3>
+          <p class="menu-card__desc">Gochujang-glazed pork frank, kimchi, crispy rice, sesame aioli, and scallions on a steamed bao bun.</p>
+          <div class="menu-card__footer">
+            <span class="menu-card__price">$15</span>
+            <button class="menu-card__add" aria-label="Add to order">
+              <i class="ph ph-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="menu-card">
+        <div class="menu-card__img" style="background:none;">
+          <img src="https://images.pexels.com/photos/4113456/pexels-photo-4113456.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&dpr=1" alt="Close up of a hot dog" loading="lazy"/>
+        </div>
+        <div class="menu-card__body">
+          <h3 class="menu-card__name">The Brisket Dive</h3>
+          <p class="menu-card__desc">Slow-smoked beef brisket frank, horseradish cream, caramelized onions, and fresh dill pickle chips.</p>
+          <div class="menu-card__footer">
+            <span class="menu-card__price">$16</span>
+            <button class="menu-card__add" aria-label="Add to order">
+              <i class="ph ph-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="menu-card">
+        <div class="menu-card__img" style="background:none;">
+          <img src="https://images.pexels.com/photos/4518646/pexels-photo-4518646.jpeg?auto=compress&cs=tinysrgb&w=600&h=450&dpr=1" alt="Hot dog sandwiches" loading="lazy"/>
+        </div>
+        <div class="menu-card__body">
+          <h3 class="menu-card__name">The Classic Curl</h3>
+          <p class="menu-card__desc">All-beef frank, yellow mustard, neon relish, sport peppers, celery salt. Pure Chicago energy.</p>
+          <div class="menu-card__footer">
+            <span class="menu-card__price">$11</span>
+            <button class="menu-card__add" aria-label="Add to order">
+              <i class="ph ph-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 — CTA card -->
+      <div class="menu-card" style="background: var(--yellow); border-color: var(--yellow); display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 32px;">
+        <div>
+          <p class="eyebrow" style="margin-bottom: 16px; opacity: 0.6;">Plus more</p>
+          <h3 class="headline-md">7 more<br/>creations<br/>await.</h3>
+        </div>
+        <a href="#" class="btn btn-primary" style="margin-top: var(--sp-md);">
+          See Full Menu
+          <i class="ph ph-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     EXPERIENCE / VIBE
+═══════════════════════════════════════════ -->
+<section class="experience">
+  <!-- Large curvy linework background accent -->
+  <svg class="experience__curvy" width="600" height="500" viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M50 450 C100 300, 200 150, 350 80 S500 60, 600 40" stroke="#FFD706" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M0 400 C80 270, 180 130, 320 60 S460 40, 560 20" stroke="#FFD706" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M100 500 C160 360, 260 210, 400 140" stroke="#FFD706" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="experience__inner">
+      <!-- Left: Content -->
+      <div>
+        <p class="eyebrow experience__eyebrow">Why reatcurly</p>
+        <h2 class="experience__headline">
+          Where every<br/>detail<br/>counts.
+        </h2>
+        <p class="experience__body body-lg" style="max-width: 44ch;">
+          From the first snap of the casing to the last bite, we sweat the small stuff so you can just enjoy the moment.
+        </p>
+
+        <div class="experience__features">
+          <div class="feature-row">
+            <div class="feature-row__icon">
+              <i class="ph ph-flame"></i>
+            </div>
+            <div>
+              <div class="feature-row__title">Open-flame grilled</div>
+              <div class="feature-row__desc">Charcoal and hardwood for a char-kissed finish you can't fake.</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row__icon">
+              <i class="ph ph-plant"></i>
+            </div>
+            <div>
+              <div class="feature-row__title">Farm-to-frank</div>
+              <div class="feature-row__desc">Direct partnerships with six local farms — no middlemen, no mystery.</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row__icon">
+              <i class="ph ph-recycle"></i>
+            </div>
+            <div>
+              <div class="feature-row__title">Zero food waste</div>
+              <div class="feature-row__desc">Our daily prep turns trimmings into sauces, stocks, and specials.</div>
+            </div>
+          </div>
+          <div class="feature-row">
+            <div class="feature-row__icon">
+              <i class="ph ph-storefront"></i>
+            </div>
+            <div>
+              <div class="feature-row__title">Pop-up &amp; catering</div>
+              <div class="feature-row__desc">Bring Reatcurly to your event. Minimum 25 guests — maximum vibes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Photo collage -->
+      <div class="experience__photo-collage">
+        <div class="collage-img collage-img--a" style="overflow:hidden;">
+          <img src="https://images.pexels.com/photos/33679844/pexels-photo-33679844.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&dpr=1" alt="Street food vendor" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+        </div>
+        <div class="collage-img collage-img--c" style="overflow:hidden;">
+          <img src="https://images.pexels.com/photos/3776870/pexels-photo-3776870.jpeg?auto=compress&cs=tinysrgb&w=400&h=500&dpr=1" alt="Friends enjoying picnic" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+        </div>
+        <div class="collage-img collage-img--b" style="overflow:hidden;">
+          <img src="https://images.pexels.com/photos/5638643/pexels-photo-5638643.jpeg?auto=compress&cs=tinysrgb&w=500&h=500&dpr=1" alt="People sharing food outdoors" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/>
+        </div>
+        <div class="collage-badge">
+          <div class="collage-badge__num">4.9</div>
+          <div class="collage-badge__label">Average Google rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════════════ -->
+<section class="testimonials">
+  <!-- Curvy yellow linework -->
+  <svg class="curvy-line" style="bottom: -20px; left: 0; width: 500px; height: 120px; opacity: 0.18;" viewBox="0 0 500 120" fill="none" aria-hidden="true">
+    <path d="M0 60 C80 20, 160 100, 240 60 S380 20, 500 60" stroke="#FFD706" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M0 90 C100 50, 200 110, 300 80 S420 40, 500 80" stroke="#FFD706" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="testimonials__header">
+      <p class="eyebrow testimonials__eyebrow">Real people, real bites</p>
+      <h2 class="headline-lg testimonials__headline">
+        What our regulars say.
+      </h2>
+    </div>
+
+    <div class="testimonials__grid">
+      <div class="testi-card">
+        <div class="testi-card__stars">
+          <i class="ph-fill ph-star"></i>
+          <i class="ph-fill ph-star"></i>
+          <i class="ph-fill ph-star"></i>
+          <i class="ph-fill ph-star"></i>
+          <i class="ph-fill ph-star"></i>
+        </div>
+        <p class="testi-card__quote">"The Golden Standard changed how I think about hot dogs. That tangerine mustard alone is worth the trip."</p>
+        <div class="testi-card__author">
+          <div class="testi-card__avatar"><i class="ph ph-user"></i></div>
+          <div>
+            <div class="testi-card__name">Marcus L.</div>
+            <div class="testi-card__loc">Chicago, IL</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-card__stars">
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+        </div>
+        <p class="testi-card__quote">"Seoul on a Bun is my Roman empire. I think about it during boring meetings. I dream about it."</p>
+        <div class="testi-card__author">
+          <div class="testi-card__avatar"><i class="ph ph-user"></i></div>
+          <div>
+            <div class="testi-card__name">Priya K.</div>
+            <div class="testi-card__loc">New York, NY</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-card__stars">
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+          <i class="ph-fill ph-star" style="color: var(--tangerine);"></i>
+        </div>
+        <p class="testi-card__quote">"Catered our company picnic and people are still messaging me about it three months later. Unreal food."</p>
+        <div class="testi-card__author">
+          <div class="testi-card__avatar"><i class="ph ph-user"></i></div>
+          <div>
+            <div class="testi-card__name">Dana W.</div>
+            <div class="testi-card__loc">Austin, TX</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     ORDER CTA BANNER
+═══════════════════════════════════════════ -->
+<section class="order-banner">
+  <!-- Curvy accent (right side) -->
+  <svg class="order-banner__curvy" width="480" height="360" viewBox="0 0 480 360" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M480 40 C380 40, 280 100, 200 180 S80 300, 20 360" stroke="var(--off-black)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M480 120 C390 120, 300 170, 220 240 S110 330, 60 360" stroke="var(--off-black)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M480 200 C400 200, 320 240, 250 290" stroke="var(--off-black)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="order-banner__inner">
+      <div>
+        <p class="eyebrow order-banner__eyebrow">Ready when you are</p>
+        <h2 class="order-banner__headline">
+          Order ahead.<br/>Skip the wait.
+        </h2>
+      </div>
+      <div class="order-banner__actions">
+        <a href="#" class="btn btn-order-main">
+          <i class="ph ph-bag"></i>
+          Order Online
+        </a>
+        <a href="#" class="btn btn-order-ghost">
+          <i class="ph ph-calendar-blank"></i>
+          Book Catering
+        </a>
+        <p class="body-sm" style="opacity: 0.6; padding-left: 4px;">Or call us at (312) 555-0194</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <!-- Brand -->
+      <div>
+        <img
+          src="/../public/recurly-name-white.png"
+          alt="Reatcurly"
+          class="footer__brand-logo"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        />
+        <span style="display:none; font-family:var(--font-headline); font-size:1.5rem; font-weight:500; letter-spacing:-0.02em; color: var(--off-white); margin-bottom: var(--sp-lg); display:block;">Reatcurly</span>
+        <p class="footer__brand-desc">Gourmet hot dogs crafted for people who believe street food can be extraordinary.</p>
+        <div class="footer__social">
+          <a href="#" class="footer__social-link" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="#" class="footer__social-link" aria-label="TikTok"><i class="ph ph-tiktok-logo"></i></a>
+          <a href="#" class="footer__social-link" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" class="footer__social-link" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <div>
+        <p class="footer__col-title">Menu</p>
+        <ul class="footer__col-links">
+          <li><a href="#">Signature Dogs</a></li>
+          <li><a href="#">Sides &amp; Add-ons</a></li>
+          <li><a href="#">Seasonal Specials</a></li>
+          <li><a href="#">Drinks</a></li>
+          <li><a href="#">Family Bundles</a></li>
+        </ul>
+      </div>
+
+      <!-- Visit -->
+      <div>
+        <p class="footer__col-title">Visit</p>
+        <ul class="footer__col-links">
+          <li><a href="#">Locations</a></li>
+          <li><a href="#">Pop-up Schedule</a></li>
+          <li><a href="#">Hours &amp; Parking</a></li>
+          <li><a href="#">Book Catering</a></li>
+          <li><a href="#">Private Events</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <p class="footer__col-title">Company</p>
+        <ul class="footer__col-links">
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 Reatcurly. All rights reserved.</p>
+      <div class="footer__legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
